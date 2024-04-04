@@ -1,0 +1,57 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block valute %}
+<div class="row" style="text-align:center">
+
+    <div class="col-4 border">
+        <form action="{% url 'valute' %}" method="GET" class="mt-2">
+            <div class="mb-3 mx-5">
+                <label class="form-label">Валюта</label>
+                <select class="form-select" aria-label="Default select example">
+                    <option value="USD">Доллар США</option>
+                    <option value="EUR">Евро</option>
+                    <option value="GBR">Фунт стерлингов</option>
+                </select>
+            </div>
+            <div class="mb-3 mx-5">
+                <label for="exampleFormControlInput1" class="form-label">Начальная дата</label>
+                <input name="startDate" type="date" class="form-control" id="exampleFormControlInput1">
+            </div>
+            <div class="mb-3 mx-5">
+                <label for="exampleFormControlInput1" class="form-label">Финальная дата</label>
+                <input name="endDate" type="date" class="form-control" id="exampleFormControlInput1">
+            </div>
+            <button type="submit" class="btn btn-primary mb-3 col">Построить график</button>
+        </form>
+    </div>
+
+    <div class="col-8 border">
+        <canvas class="mt-2" id="chart" height="200"></canvas>
+    </div>
+</div>
+<script>
+    let ctx = document.getElementById("chart").getContext("2d");
+    
+    let chart = new Chart(ctx, {
+      type: "bar",
+      data: {
+         labels: [{% for dt in dates %}"{{ dt }}",{% endfor %}],
+         datasets: [
+            {
+              label: "Цена (₽)",
+              backgroundColor: "#79AEC8",
+              borderColor: "#417690",
+              data: [{% for val in rates %}"{{ val }}",{% endfor %}]
+            }
+         ]
+      },
+      options: {
+         title: {
+            text: "valute course",
+            display: false
+         }
+      }
+    });
+</script>
+{% endblock %}
